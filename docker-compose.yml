@@ -131,3 +131,4 @@ volumes:
   kafka2-logs:
   kafka3-logs:
   images:
+  portainer:
