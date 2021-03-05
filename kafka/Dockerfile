@@ -1,7 +1,7 @@
 # Dockerfile
 FROM ubuntu:16.04
 
-RUN apt-get update && apt-get install openjdk-8-jre -y 
+RUN apt-get update && apt-get install openjdk-8-jre -y curl
 
 ENV KAFKA_VERSION=2.11-1.1.0 
 
