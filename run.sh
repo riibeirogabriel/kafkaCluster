@@ -25,7 +25,7 @@ echo "--------------------------------------------------------------------"
 echo "Deploying microservices in swarm cluster..."
 echo "--------------------------------------------------------------------"
 
-docker stack deploy --compose-file=services.yml microservice
+docker stack deploy --compose-file=docker-compose.yml microservice
 
 echo "--------------------------------------------------------------------"
 echo "Pushing the microservice images in local repository..."
