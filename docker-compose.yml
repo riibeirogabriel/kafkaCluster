@@ -122,6 +122,7 @@ services:
 
 networks:
   kafka:
+  portainer:
 
 volumes:
   zoo-data:
