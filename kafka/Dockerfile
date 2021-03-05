@@ -11,5 +11,4 @@ RUN tar -xzf kafka_2.11-${KAFKA_VERSION}.tgz
 
 RUN mkdir /kafka
 
-ADD ./kafka_${KAFKA_VERSION}.tgz ./ 
-RUN mv kafka_${KAFKA_VERSION} kafka
+RUN mv kafka_${KAFKA_VERSION}/* kafka
