@@ -72,7 +72,7 @@ services:
     command: /kafka/config/zookeeper.properties
 
   kafka1:  
-      image: 127.0.0.1:5050/kafka
+    image: 127.0.0.1:5050/kafka
     volumes:
       - "kafka1-logs:/tmp/kafka-logs"
     ports:
