@@ -7,7 +7,7 @@ ENV KAFKA_VERSION=2.11-1.1.0
 
 RUN wget https://archive.apache.org/dist/kafka/1.1.0/kafka_${KAFKA_VERSION}.tgz 
 
-RUN tar -xzf kafka_2.11-${KAFKA_VERSION}.tgz
+RUN tar -xzf kafka_${KAFKA_VERSION}.tgz
 
 RUN mkdir /kafka
 
