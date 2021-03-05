@@ -1,0 +1,135 @@
+version: "3.8"
+
+x-deploy: &default-deploy
+  replicas: 1
+  restart_policy:
+    condition: on-failure
+
+x-deploy-manager: &default-deploy-manager
+  <<: *default-deploy
+  placement:
+    constraints:
+      - "node.role==manager"
+
+x-deploy-worker: &default-deploy-worker
+  <<: *default-deploy
+  placement:
+    constraints:
+      - "node.role==worker"
+
+
+services:
+  images:
+    image: registry:2.7.1
+    ports:
+      - "5050:5000"
+    deploy: *default-deploy-manager
+    networks:
+      - database
+    volumes:
+      - "images:/var/lib/registry"
+
+  agent:
+    image: portainer/agent:linux-amd64-2.1.0-alpine
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+    networks:
+      - portainer
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - "node.platform.os==linux"
+
+  portainer:
+    image: portainer/portainer-ce:2.1.1-alpine
+    command: -H tcp://tasks.agent:9001 --tlsskipverify
+    ports:
+      - "9000:9000"
+      - "8000:8000"
+    volumes:
+      - portainer:/data
+    networks:
+      - portainer
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - "node.role==manager"
+
+  zookeeper:
+    image: 127.0.0.1:5050/kafka
+    volumes:
+      - "zoo-data:/tmp/zookeeper"
+    ports:
+      - "2181:2181"
+    networks:
+     - kafka
+    deploy: *x-deploy-manager
+    command: /kafka/bin/zookeeper-server-start.sh 
+    command: /kafka/config/zookeeper.properties
+
+  kafka1:  
+      image: 127.0.0.1:5050/kafka
+    volumes:
+      - "kafka1-logs:/tmp/kafka-logs"
+    ports:
+      - "9093:9093"
+    networks:
+     - kafka
+    deploy: *x-deploy-manager
+    command:  /kafka/bin/kafka-server-start.sh /kafka/config/server.properties \
+              --override listeners=INT://:9092,EXT://0.0.0.0:9093 \   
+              --override listener.security.protocol.map=INT:PLAINTEXT,EXT:PLAINTEXT \
+              --override inter.broker.listener.name=INT \    
+              --override advertised.listeners=INT://:9092,EXT://node3:9093 \ 
+              --override zookeeper.connect=zookeeper:2181 \    
+              --override broker.id=1
+
+  kafka2:  
+    image: 127.0.0.1:5050/kafka
+    volumes:
+      - "kafka2-logs:/tmp/kafka-logs"
+    ports:
+      - "9094:9094"
+    networks:
+      - kafka
+    deploy: *x-deploy-worker
+    command:  /kafka/bin/kafka-server-start.sh /kafka/config/server.properties \
+              --override listeners=INT://:9092,EXT://0.0.0.0:9094 \
+              --override listener.security.protocol.map=INT:PLAINTEXT,EXT:PLAINTEXT \
+              --override inter.broker.listener.name=INT \
+              --override advertised.listeners=INT://:9092,EXT://node4:9094 \
+              --override zookeeper.connect=zookeeper:2181 \
+              --override broker.id=2
+
+  kafka3:  
+    image: 127.0.0.1:5050/kafka
+    volumes:
+      - "kafka3-logs:/tmp/kafka-logs"
+    ports:
+      - "9095:9095"
+    networks:
+      - kafka
+    deploy: *x-deploy-worker
+    command:  /kafka/bin/kafka-server-start.sh /kafka/config/server.properties \
+              --override listeners=INT://:9092,EXT://0.0.0.0:9095 \
+              --override listener.security.protocol.map=INT:PLAINTEXT,EXT:PLAINTEXT \
+              --override inter.broker.listener.name=INT \
+              --override advertised.listeners=INT://:9092,EXT://node5:9095 \
+              --override zookeeper.connect=zookeeper:2181 \
+              --override broker.id=3
+    
+    
+
+
+networks:
+  kafka:
+
+volumes:
+  zoo-data:
+  kafka1-logs:
+  kafka2-logs:
+  kafka3-logs:
