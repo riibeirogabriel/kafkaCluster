@@ -5,7 +5,9 @@ RUN apt-get update && apt-get install openjdk-8-jre -y curl
 
 ENV KAFKA_VERSION=2.11-1.1.0 
 
-RUN curl -s https://archive.apache.org/dist/kafka/1.1.0/kafka_${KAFKA_VERSION}.tgz | tar -xz -C kafka_${KAFKA_VERSION}.tgz
+RUN curl -s https://archive.apache.org/dist/kafka/1.1.0/kafka_${KAFKA_VERSION}.tgz 
+
+RUN tar -xzf kafka_2.11-${KAFKA_VERSION}.tgz
 
 RUN mkdir /kafka
 
