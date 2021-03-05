@@ -24,8 +24,6 @@ services:
     ports:
       - "5050:5000"
     deploy: *default-deploy-manager
-    networks:
-      - database
     volumes:
       - "images:/var/lib/registry"
 
