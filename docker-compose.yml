@@ -59,6 +59,7 @@ services:
 
   zookeeper:
     image: 127.0.0.1:5050/kafka
+    build: kafka_image
     volumes:
       - "zoo-data:/tmp/zookeeper"
     ports:

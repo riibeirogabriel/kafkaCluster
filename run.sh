@@ -37,6 +37,6 @@ kafka_repository=127.0.0.1:5050/kafka
 
 
 echo "--------------------------------------------------------------------"
-echo "Pushing databaseApi microservice image..."
+echo "Pushing kafka image..."
 echo "--------------------------------------------------------------------"
 docker push $kafka_repository
