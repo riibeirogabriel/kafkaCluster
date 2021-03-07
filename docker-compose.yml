@@ -61,7 +61,7 @@ services:
     image: 127.0.0.1:5050/kafka
     build: kafka_image
     volumes:
-      - "zoo-data:/tmp/zookeeper"
+      - "zookeeper:/tmp/zookeeper"
     ports:
       - "2181:2181"
     networks:
@@ -73,7 +73,7 @@ services:
   kafka1:  
     image: 127.0.0.1:5050/kafka
     volumes:
-      - "kafka1-logs:/tmp/kafka-logs"
+      - "kafka1:/tmp/kafka-logs"
     ports:
       - "9093:9093"
     networks:
@@ -83,14 +83,14 @@ services:
               --override listeners=INT://:9092,EXT://0.0.0.0:9093 \   
               --override listener.security.protocol.map=INT:PLAINTEXT,EXT:PLAINTEXT \
               --override inter.broker.listener.name=INT \    
-              --override advertised.listeners=INT://:9092,EXT://node3:9093 \ 
+              --override advertised.listeners=INT://:9092,EXT://0.0.0.0:9093 \ 
               --override zookeeper.connect=zookeeper:2181 \    
               --override broker.id=1
 
   kafka2:  
     image: 127.0.0.1:5050/kafka
     volumes:
-      - "kafka2-logs:/tmp/kafka-logs"
+      - "kafka2:/tmp/kafka-logs"
     ports:
       - "9094:9094"
     networks:
@@ -100,14 +100,14 @@ services:
               --override listeners=INT://:9092,EXT://0.0.0.0:9094 \
               --override listener.security.protocol.map=INT:PLAINTEXT,EXT:PLAINTEXT \
               --override inter.broker.listener.name=INT \
-              --override advertised.listeners=INT://:9092,EXT://node4:9094 \
+              --override advertised.listeners=INT://:9092,EXT://0.0.0.0:9094 \
               --override zookeeper.connect=zookeeper:2181 \
               --override broker.id=2
 
   kafka3:  
     image: 127.0.0.1:5050/kafka
     volumes:
-      - "kafka3-logs:/tmp/kafka-logs"
+      - "kafka3:/tmp/kafka-logs"
     ports:
       - "9095:9095"
     networks:
@@ -117,7 +117,7 @@ services:
               --override listeners=INT://:9092,EXT://0.0.0.0:9095 \
               --override listener.security.protocol.map=INT:PLAINTEXT,EXT:PLAINTEXT \
               --override inter.broker.listener.name=INT \
-              --override advertised.listeners=INT://:9092,EXT://node5:9095 \
+              --override advertised.listeners=INT://:9092,EXT://0.0.0.0:9095 \
               --override zookeeper.connect=zookeeper:2181 \
               --override broker.id=3
 
@@ -126,9 +126,9 @@ networks:
   portainer:
 
 volumes:
-  zoo-data:
-  kafka1-logs:
-  kafka2-logs:
-  kafka3-logs:
+  zookeeper:
+  kafka1:
+  kafka2:
+  kafka3:
   images:
   portainer:
