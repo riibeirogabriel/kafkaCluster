@@ -56,15 +56,15 @@ services:
       - "zookeeper"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-  
-  kafdrop:
-    image: obsidiandynamics/kafdrop:3.27.0
-    restart: "no"
+
+
+  kafkaui:
+    image: provectuslabs/kafka-ui
     ports:
-      - "7000:9000"
-    environment:
-      KAFKA_BROKERCONNECT: "kafka:9094"
-      JVM_OPTS: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
+      - "7000:8080"
+    environment: 
+      KAFKA_CLUSTERS_0_NAME: "local" 
+	    KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:9094"
     depends_on:
       - "kafka"
 
